@@ -30,6 +30,7 @@ public abstract class Hero extends Entity implements Gold, Leather {
             leather += l.getLeather();
 
         regen();
+        System.out.println("Je loot");
     }
 
     @Override

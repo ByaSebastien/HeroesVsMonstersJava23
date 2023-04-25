@@ -12,6 +12,9 @@ public class Main {
         Hero h = new Warrior("Rocky");
         Monster m = new Dragon();
 
+        m.addDieEventSubscriber(monstre -> h.loot(monstre));
+//        m.addDieEventSubscriber(h::loot);
+
         while(h.isAlive() && m.isAlive()){
 
             h.hit(m);
@@ -21,7 +24,5 @@ public class Main {
 
             System.out.println("Hero : " + h.getCurrentHp() + "\nMonstre : " + m.getCurrentHp() );
         }
-
-
     }
 }

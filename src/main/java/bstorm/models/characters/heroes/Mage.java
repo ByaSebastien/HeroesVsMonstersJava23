@@ -16,6 +16,7 @@ public class Mage extends Hero{
 
         int damage = getStats().modifier(StatType.intelligence) + Dice.D4.throwDice();
         target.takeDamage(damage);
+        super.hit(target);
     }
 
     @Override

@@ -1,13 +1,18 @@
 package bstorm.models.characters;
 
 import bstorm.models.characters.heroes.Hero;
+import bstorm.models.characters.interfaces.DieEventSubscriber;
 import bstorm.models.characters.monsters.Monster;
 import bstorm.models.properties.StatType;
 import bstorm.models.properties.Stats;
 import bstorm.utils.Dice;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Entity {
 
+    private List<DieEventSubscriber> dieEvent = new ArrayList<>();
     private Stats stats;
 
     private Integer currentHp;
@@ -40,6 +45,9 @@ public abstract class Entity {
     private void setCurrentHp(Integer value){
 
 //        currentHp = value < 0 ? 0 : value > getHp() ? getHp() : value;
+//        if(value <= 0)
+//            raiseDieEventSubscriber();
+
         currentHp = value < 0 ? 0 : Math.min(getHp(),value);
     }
 
@@ -64,6 +72,19 @@ public abstract class Entity {
         return getCurrentHp() > 0;
     }
 
+    public void addDieEventSubscriber(DieEventSubscriber subscriber){
+
+        dieEvent.add(subscriber);
+    }
+
+    public void raiseDieEventSubscriber(){
+
+        for (DieEventSubscriber subscriber : dieEvent){
+
+            subscriber.execute(this);
+        }
+    }
+
     public void regen(){
 
         setCurrentHp(getHp());
@@ -79,6 +100,9 @@ public abstract class Entity {
             return;
 
         setCurrentHp(getCurrentHp() - amount);
+
+//        if(!isAlive())
+//            raiseDieEventSubscriber();
     }
 
     protected void generate(){
@@ -89,7 +113,11 @@ public abstract class Entity {
             getStats().generate(Dice.D4);
     }
 
-    public abstract void hit(Entity target);
+    public void hit(Entity target){
+
+        if(!target.isAlive())
+            target.raiseDieEventSubscriber();
+    }
 }
 
 

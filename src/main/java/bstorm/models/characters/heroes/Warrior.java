@@ -16,6 +16,7 @@ public class Warrior extends Hero{
 
         int damage = getStats().modifier(StatType.strength) + Dice.D4.throwDice();
         target.takeDamage(damage);
+        super.hit(target);
     }
 
     @Override
